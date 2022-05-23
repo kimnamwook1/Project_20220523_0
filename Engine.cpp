@@ -1,3 +1,6 @@
+#include <iostream>
+#include <fstream>
+
 #include "Engine.h"
 #include "World.h"
 #include "Wall.h"
@@ -5,8 +8,6 @@
 #include "Goal.h"
 #include "Floor.h"
 #include "Monster.h"
-#include <iostream>
-#include <fstream>
 
 
 Engine::Engine()
