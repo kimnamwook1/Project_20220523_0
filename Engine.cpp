@@ -23,7 +23,7 @@ Engine::~Engine()
 void Engine::Initialize()
 {
 	bRunning = true;
-	Myworld = new World();
+	MyWorld = new World();
 }
 
 void Engine::Load(string MapFilename)
@@ -46,30 +46,30 @@ void Engine::Load(string MapFilename)
 	ifstream MapFile(MapFilename); // 입력 파일 , 괄호 안에는 파일 이름
 
 	int Y = 0;
-	while (MapFile.peek() != EOF)//peek 이 맵을 가져오는 함수
+	while (MapFile.peek() != EOF)//peek==몇번쨰 줄 몇번쨰 칸인지 // EOF =end of file
 	{
 		char Buffer[1024] = { 0, };
-		MapFile.getline(Buffer, 1024);
+		MapFile.getline(Buffer, 1024); // 한 줄을 읽어와라.
 
-		for (size_t X = 0; X < strlen(Buffer); ++X)
+		for (size_t X = 0; X < strlen(Buffer); ++X) // 버퍼의 사이즈는 양수이기에 size_t를 사용
 		{
 			char Cursor = Buffer[X];
 			switch (Cursor)
 			{
 			case '#':
-				Myworld->MyActors.push_back(new AWall(X, Y, '#', true));
+				MyWorld->MyActors.push_back(new AWall(X, Y, '#', true));
 				break;
 			case ' ':
-				Myworld->MyActors.push_back(new AFloor(X, Y, ' ', false));
+				MyWorld->MyActors.push_back(new AFloor(X, Y, ' ', false));
 				break;
 			case 'P':
-				Myworld->MyActors.push_back(new APlayer(X, Y, 'P', true));
+				MyWorld->MyActors.push_back(new APlayer(X, Y, 'P', true));
 				break;
 			case 'G':
-				Myworld->MyActors.push_back(new AGoal(X, Y, 'G', false));
+				MyWorld->MyActors.push_back(new AGoal(X, Y, 'G', false));
 				break;
 			case 'M':
-				Myworld->MyActors.push_back(new AMonster(X, Y, 'M', false));
+				MyWorld->MyActors.push_back(new AMonster(X, Y, 'M', false));
 				break;
 			}
 		}
@@ -83,13 +83,14 @@ void Engine::Run()
 {
 	while (bRunning) //1Frame
 	{
-		Myworld->Tick();
-		Myworld->Render();
+		MyWorld->Tick();
+		MyWorld->Render();
 	}
 }
 
+
 void Engine::Terminate()
 {
-	delete Myworld;
-	Myworld = nullptr;
+	delete MyWorld;
+	MyWorld = nullptr;
 }

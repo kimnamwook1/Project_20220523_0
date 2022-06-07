@@ -8,7 +8,7 @@ public:
 	Engine();
 	virtual ~Engine();
 
-	World* Myworld;
+	World* MyWorld;
 	bool bRunning;
 
 	void Initialize();
