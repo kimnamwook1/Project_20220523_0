@@ -23,8 +23,15 @@ void World::Tick()
 
 void World::Render()
 {
+	system("cls");
+
 	for (auto Actor : MyActors)
 	{
 		Actor->Render();
 	}
+}
+
+void World::SpawnActor(AActor* NewActor)
+{
+	MyActors.push_back(NewActor);
 }

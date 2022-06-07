@@ -6,7 +6,7 @@ class AWall: public AActor
 public:
 	AWall();
 
-	AWall(int NewX, int NewY, char NewShape, bool bNewCollision = false);//default arguement
+	AWall(int NewX, int NewY, char NewShape, bool bNewCollision = false, int NewSortOrder =2);//default arguement
 	virtual ~AWall();
 	
 };

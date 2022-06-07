@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include"Actor.h"
+#include "Actor.h"
 
 using namespace std;
 
@@ -11,8 +11,16 @@ public:
 	virtual ~World();
 	
 	vector<AActor*> MyActors;
+	
 
 	void Tick();
 	void Render();
+
+	void SpawnActor(AActor* NewActor);
+
+	////static vector<AActor*> GetActorList() 
+	//{
+	//	return MyActors;
+	//}
 };
 

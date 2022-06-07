@@ -5,9 +5,9 @@ AFloor::AFloor()
 {
 }
 
-AFloor::AFloor(int NewX, int NewY, char NewShape, bool bNewCollision)
+AFloor::AFloor(int NewX, int NewY, char NewShape, bool bNewCollision, int NewSortOrder)
 {
-	AActor::AActor(NewX, NewY, NewShape, bNewCollision);
+	AActor::AActor(NewX, NewY, NewShape, bNewCollision, NewSortOrder);
 }
 
 AFloor::~AFloor()

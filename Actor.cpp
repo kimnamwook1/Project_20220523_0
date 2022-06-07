@@ -1,4 +1,6 @@
 #include "Actor.h"
+#include "Engine.h"
+#include "World.h"
 #include <iostream>
 #include <Windows.h>
 
@@ -10,15 +12,16 @@ AActor::AActor()
 	Y = 0;
 	Shape = ' ';
 	bCollision = false;
-
+	SortOrder = 1;
 }
 
-AActor::AActor(int NewX, int NewY, char NewShape, bool bNewCollision)
+AActor::AActor(int NewX, int NewY, char NewShape, bool bNewCollision, int NewSortOrder)
 {
 	X = NewX;
 	Y = NewY;
 	Shape = NewShape;
 	bCollision = bNewCollision;
+	SortOrder = NewSortOrder;
 }
 
 AActor::~AActor()
@@ -37,4 +40,18 @@ void AActor::Render()
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
 
 	cout << Shape;
+}
+
+bool AActor::PredictCollision(int PredictX, int PredictY)
+{
+	
+	for (auto Actor : GEngine->GetWorld()->MyActors)
+	{
+		if (Actor->X == PredictX && Actor->Y == PredictY && Actor->bCollision)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <conio.h> //inline 쓰려면 전처리 해줘여 한다.
+#include <algorithm>
 
 #include "Engine.h"
 #include "World.h"
@@ -9,9 +11,13 @@
 #include "Floor.h"
 #include "Monster.h"
 
+int Engine::KeyCode = 0; //헤더에 선언만 하고 cpp에 초기화 해야한다.
+
+Engine* Engine::Instance = nullptr;
 
 Engine::Engine()
 {
+	Instance = this;
 	Initialize();
 }
 
@@ -57,24 +63,26 @@ void Engine::Load(string MapFilename)
 			switch (Cursor)
 			{
 			case '#':
-				MyWorld->MyActors.push_back(new AWall(X, Y, '#', true));
-				break;
-			case ' ':
-				MyWorld->MyActors.push_back(new AFloor(X, Y, ' ', false));
+				MyWorld->SpawnActor(new AWall((int)X, Y, '#', true));
 				break;
 			case 'P':
-				MyWorld->MyActors.push_back(new APlayer(X, Y, 'P', true));
+				MyWorld->SpawnActor(new APlayer((int)X, Y, 'P', true));
 				break;
 			case 'G':
-				MyWorld->MyActors.push_back(new AGoal(X, Y, 'G', false));
+				MyWorld->SpawnActor(new AGoal((int)X, Y, 'G', false));
 				break;
 			case 'M':
-				MyWorld->MyActors.push_back(new AMonster(X, Y, 'M', false));
+				MyWorld->SpawnActor(new AMonster((int)X, Y, 'M', false));
 				break;
 			}
+			MyWorld->SpawnActor(new AFloor((int)X, Y, ' ', false)); // 바닥을 그리고 그 위에 액터가 올라가야하기 떄문
+
 		}
 		Y++;
 	}
+	//그리는 순간의 순서를 변경
+	sort(MyWorld->MyActors.begin(), MyWorld->MyActors.end(), AActor::Compare);
+
 	MapFile.close();
 }
 
@@ -83,6 +91,7 @@ void Engine::Run()
 {
 	while (bRunning) //1Frame
 	{
+		Input();
 		MyWorld->Tick();
 		MyWorld->Render();
 	}
@@ -93,4 +102,9 @@ void Engine::Terminate()
 {
 	delete MyWorld;
 	MyWorld = nullptr;
+}
+
+void Engine::Input()
+{
+	Engine::KeyCode = _getch();
 }
