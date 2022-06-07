@@ -61,7 +61,7 @@ int SDL_main(int argc, char* argv[])
 		//등록된 일 시작
 		SDL_RenderPresent(MyRenderer);
 	}
-
+	//생성했으면 제거해야 하는데 제거는 생성의 역순으로
 	SDL_DestroyRenderer(MyRenderer);
 
 	SDL_DestroyWindow(MyWindow);
