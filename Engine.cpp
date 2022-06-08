@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <conio.h> //inline 쓰려면 전처리 해줘여 한다.
+#include <conio.h> //inline 쓰려면 전처리 해줘야 한다.
 #include <algorithm>
 
 #include "Engine.h"
@@ -10,6 +10,8 @@
 #include "Goal.h"
 #include "Floor.h"
 #include "Monster.h"
+#include "SDL.h"
+
 
 int Engine::KeyCode = 0; //헤더에 선언만 하고 cpp에 초기화 해야한다.
 
@@ -30,6 +32,16 @@ void Engine::Initialize()
 {
 	bRunning = true;
 	MyWorld = new World();
+
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	{
+		SDL_Log("SDL_INIT_ERROR");
+	}
+
+	MyWindow = SDL_CreateWindow("Maze", 100, 100, 800, 600, SDL_WINDOW_OPENGL);
+	MyRenderer = SDL_CreateRenderer(MyWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+	
+
 }
 
 void Engine::Load(string MapFilename)
@@ -66,7 +78,7 @@ void Engine::Load(string MapFilename)
 				MyWorld->SpawnActor(new AWall((int)X, Y, '#', true));
 				break;
 			case 'P':
-				MyWorld->SpawnActor(new APlayer((int)X, Y, 'P', true));
+				MyWorld->SpawnActor(new APlayer((int)X, Y, 'P', false));
 				break;
 			case 'G':
 				MyWorld->SpawnActor(new AGoal((int)X, Y, 'G', false));
@@ -91,9 +103,18 @@ void Engine::Run()
 {
 	while (bRunning) //1Frame
 	{
+		DeltaSeconds = SDL_GetTicks64() - LastTick;
 		Input();
 		MyWorld->Tick();
+		SDL_SetRenderDrawColor(MyRenderer, 0xff, 0x00, 0x00, 0xff);
+		SDL_RenderClear(MyRenderer);
+
 		MyWorld->Render();
+
+		/*SDL_RenderFillRect(MyRenderer, new SDL_Rect{ 0, 0, 100, 100 });*/
+		LastTick = SDL_GetTicks64();
+		SDL_RenderPresent(MyRenderer);
+	
 	}
 }
 
@@ -102,9 +123,14 @@ void Engine::Terminate()
 {
 	delete MyWorld;
 	MyWorld = nullptr;
+
+	SDL_DestroyRenderer(MyRenderer);
+	SDL_DestroyWindow(MyWindow);
+	SDL_Quit();
+
 }
 
 void Engine::Input()
 {
-	Engine::KeyCode = _getch();
+	SDL_PollEvent(&MyEvent);//input
 }
