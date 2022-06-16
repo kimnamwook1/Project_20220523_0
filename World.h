@@ -12,10 +12,9 @@ public:
 	
 	vector<AActor*> MyActors;
 	
-
+	void BeginPlay();
 	void Tick();
 	void Render();
-
 	void SpawnActor(AActor* NewActor);
 
 	////static vector<AActor*> GetActorList() 

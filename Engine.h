@@ -4,6 +4,7 @@
 #include "ESpriteType.h"
 #include "SDL.h"
 
+
 #pragma comment(lib, "SDL2main.lib")
 #pragma comment(lib, "SDL2.lib")
 

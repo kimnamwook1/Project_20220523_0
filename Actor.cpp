@@ -34,6 +34,10 @@ AActor::~AActor()
 	SDL_FreeSurface(Image);
 }
 
+void AActor::BeginPlay()
+{
+}
+
 void AActor::Tick()
 {
 }

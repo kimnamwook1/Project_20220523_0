@@ -3,6 +3,8 @@
 #include <conio.h> //inline 쓰려면 전처리 해줘야 한다.
 #include <algorithm>
 
+#include "SDL_mixer.h"
+
 #include "Engine.h"
 #include "World.h"
 #include "Wall.h"
@@ -11,6 +13,8 @@
 #include "Floor.h"
 #include "Monster.h"
 #include "SDL.h"
+#include "ASound.h"
+#include "Text.h"
 
 
 int Engine::KeyCode = 0; //헤더에 선언만 하고 cpp에 초기화 해야한다.
@@ -40,6 +44,10 @@ void Engine::Initialize()
 
 	MyWindow = SDL_CreateWindow("Maze", 100, 100, 800, 600, SDL_WINDOW_OPENGL);
 	MyRenderer = SDL_CreateRenderer(MyWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+
+	//사운드 초기화
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	TTF_Init();
 	
 
 }
@@ -64,13 +72,16 @@ void Engine::Load(string MapFilename)
 	ifstream MapFile(MapFilename); // 입력 파일 , 괄호 안에는 파일 이름
 
 	int Y = 0;
+	int MaxX = 0;	
 	while (MapFile.peek() != EOF)//peek==몇번쨰 줄 몇번쨰 칸인지 // EOF =end of file
 	{
 		char Buffer[1024] = { 0, };
 		MapFile.getline(Buffer, 1024); // 한 줄을 읽어와라.
+		MaxX = strlen(Buffer);
 
 		for (size_t X = 0; X < strlen(Buffer); ++X) // 버퍼의 사이즈는 양수이기에 size_t를 사용
 		{
+		
 			char Cursor = Buffer[X];
 			switch (Cursor)
 			{
@@ -92,15 +103,24 @@ void Engine::Load(string MapFilename)
 		}
 		Y++;
 	}
+
+	SDL_SetWindowSize(MyWindow, MaxX * 60, Y * 60); //창 사이즈 바꾸기
+
+
 	//그리는 순간의 순서를 변경
 	sort(MyWorld->MyActors.begin(), MyWorld->MyActors.end(), AActor::Compare);
 
 	MapFile.close();
+
+	MyWorld->SpawnActor(new ASound(100, 100, "data/bgm.mp3", -1));
+	MyWorld->SpawnActor(new AText(100, 100, "Hello World", SDL_Color{ 255, 0, 0 }, 40));
 }
 
 
 void Engine::Run()
 {
+	MyWorld->BeginPlay();//run할 때 마이월드의 비긴플레이 실행해
+
 	while (bRunning) //1Frame
 	{
 		DeltaSeconds = SDL_GetTicks64() - LastTick;
@@ -127,6 +147,7 @@ void Engine::Terminate()
 	SDL_DestroyRenderer(MyRenderer);
 	SDL_DestroyWindow(MyWindow);
 	SDL_Quit();
+	TTF_Quit();
 
 }
 

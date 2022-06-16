@@ -13,6 +13,14 @@ World::~World()
 	MyActors.clear(); // 메모리에서 날리는 작업
 }
 
+void World::BeginPlay()
+{
+	for (auto Actor : MyActors) 
+	{
+		Actor->BeginPlay();
+	}
+}
+
 void World::Tick()
 {
 	for (auto Actor : MyActors) // 마이 액터에 있는 것들을 하나씩 꺼내서 tick을 실행시켜주세요.
